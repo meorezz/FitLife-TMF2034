@@ -1,7 +1,6 @@
 """
 FitLife Wellness Centre Database Application
-Main Entry Point
-Author: Team D - Member 2 (Backend Developer)
+Author: Meor Hazrul 
 """
 
 from database.db_connection import FitLifeDB
@@ -16,16 +15,14 @@ import sys
 
 
 def main():
-    """Main application function"""
     print("\n" + "=" * 60)
     print(" " * 15 + "FITLIFE WELLNESS CENTRE")
     print(" " * 12 + "Database Management System")
     print("=" * 60)
     
-    # Initialize database connection
+
     db = FitLifeDB()
     
-    # Initialize operation modules
     member_ops = MemberOperations(db)
     trainer_ops = TrainerOperations(db)
     program_ops = ProgramOperations(db)
@@ -34,7 +31,7 @@ def main():
     payment_ops = PaymentOperations(db)
     menu = Menu()
     
-    # Main application loop
+
     while True:
         try:
             menu.display_main_menu()
@@ -64,7 +61,6 @@ def main():
                     input("\nPress Enter to continue...")
             
             elif choice == '2':
-                # Trainer Management
                 while True:
                     menu.display_trainer_menu()
                     sub_choice = input("\nEnter your choice (1-6): ").strip()
@@ -87,7 +83,6 @@ def main():
                     input("\nPress Enter to continue...")
             
             elif choice == '3':
-                # Program Management
                 while True:
                     menu.display_program_menu()
                     sub_choice = input("\nEnter your choice (1-6): ").strip()
@@ -110,7 +105,6 @@ def main():
                     input("\nPress Enter to continue...")
             
             elif choice == '4':
-                # Class Management
                 while True:
                     menu.display_class_menu()
                     sub_choice = input("\nEnter your choice (1-5): ").strip()
@@ -131,7 +125,6 @@ def main():
                     input("\nPress Enter to continue...")
             
             elif choice == '5':
-                # Enrollment Management
                 while True:
                     menu.display_enrollment_menu()
                     sub_choice = input("\nEnter your choice (1-5): ").strip()
@@ -152,7 +145,6 @@ def main():
                     input("\nPress Enter to continue...")
             
             elif choice == '6':
-                # Payment Management
                 while True:
                     menu.display_payment_menu()
                     sub_choice = input("\nEnter your choice (1-5): ").strip()
@@ -173,12 +165,10 @@ def main():
                     input("\nPress Enter to continue...")
             
             elif choice == '7':
-                # About System
                 menu.display_about()
                 input("\nPress Enter to continue...")
             
             elif choice == '8':
-                # Exit
                 print("\n" + "=" * 60)
                 print("Thank you for using FitLife Wellness Centre System!")
                 print("=" * 60)
