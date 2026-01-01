@@ -2,6 +2,9 @@ from __future__ import annotations
 
 from .queries import commit, run_query
 from utils.utils import print_table, prompt, prompt_decimal, prompt_int
+from utils.menu import crud_menu
+from operations.sql_console import sql_console
+
 
 
 def list_programs(conn):
@@ -60,3 +63,26 @@ def delete_program(conn):
     run_query(conn, "DELETE FROM Program WHERE Program_ID=%s", (pid,))
     commit(conn)
     print("Program deleted (and dependent rows removed).")
+    
+def programs_menu(conn):
+    while True:
+        print("\n=== PROGRAMS ===")
+        print("1) Selective Mode")
+        print("2) Console Script Mode")
+        print("0) Back")
+        choice = prompt("Choose")
+
+        if choice == "1":
+            crud_menu(conn, "PROGRAMS", {
+                "1": ("List programs", list_programs),
+                "2": ("Add program", add_program),
+                "3": ("Update program", update_program),
+                "4": ("Delete program", delete_program),
+                "0": ("Back", lambda c: None),
+            })
+        elif choice == "2":
+            sql_console(conn, "PROGRAMS",)
+        elif choice == "0":
+            return
+        else:
+            print("Invalid choice.")

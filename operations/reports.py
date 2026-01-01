@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from .queries import run_query
 from utils.utils import print_table, prompt
+from operations.sql_console import sql_console
 
 
 def report_members_summary(conn):
@@ -109,9 +110,9 @@ def report_top5_programs(conn):
     print_table(headers, rows)
 
 
-def reports_menu(conn):
+def reports_selective_menu(conn):
     while True:
-        print("\n=== REPORTS ===")
+        print("\n=== REPORTS (Selective Mode) ===")
         print("1) All members list with total number of programs enrolled, total classes attended, total payments made and membership status.")
         print("2) All scheduled classes with date, time, trainer, class status (completed, cancelled, active) and program category")
         print("3) Trainer performance reports (trainer name, total no. of classes taught, total missed or cancelled classes)")
@@ -129,6 +130,54 @@ def reports_menu(conn):
             report_fees_quarterly_and_annual(conn)
         elif choice == "5":
             report_top5_programs(conn)
+        elif choice == "0":
+            return
+        else:
+            print("Invalid choice.")
+
+QUESTIONS = {
+    "1": "All members list with total number of programs enrolled, total classes attended, total payments made and membership status.",
+    "2": "All scheduled classes with date, time, trainer, class status (completed, cancelled, active) and program category.",
+    "3": "Trainer performance reports (trainer name, total no. of classes taught, total missed or cancelled classes).",
+    "4": "Quarterly and annual membership fees.",
+    "5": "Top 5 most popular programs with the total no. of enrolled members, assigned trainer and program category."
+}
+            
+def reports_menu(conn):
+    while True:
+        print("\n=== REPORTS ===")
+        print("1) Selective Mode")
+        print("2) Console Script Mode")
+        print("0) Back")
+        choice = prompt("Choose")
+
+        if choice == "1":
+            reports_selective_menu(conn)
+        elif choice == "2":
+            print("\n=== REPORT QUESTIONS ===")
+            print("1) All members list with total number of programs enrolled, total classes attended, total payments made and membership status.")
+            print("2) All scheduled classes with date, time, trainer, class status (completed, cancelled, active) and program category")
+            print("3) Trainer performance reports (trainer name, total no. of classes taught, total missed or cancelled classes)")
+            print("4) Quarterly and annual membership fees")
+            print("5) Top 5 most popular programs with the total no. of enrolled members, assigned trainer and program category")
+            print("0) Back")
+            q = prompt("Choose question")
+            
+            if q == "0":
+                break
+            
+            if q in QUESTIONS:
+                print("\n==============================")
+                print(f"Selected Question = Question {q}:")
+                print(QUESTIONS[q])
+                print("==============================")
+
+
+                sql_console(conn, f"REPORTS - Question {q}")
+            
+            else:
+                print("Invalid choice.")
+                
         elif choice == "0":
             return
         else:

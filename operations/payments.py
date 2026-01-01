@@ -4,6 +4,9 @@ from datetime import datetime
 
 from .queries import commit, run_query
 from utils.utils import print_table, prompt, prompt_datetime, prompt_decimal, prompt_int
+from utils.menu import crud_menu
+from operations.sql_console import sql_console
+
 
 
 def list_payments(conn):
@@ -46,3 +49,26 @@ def delete_payment(conn):
     run_query(conn, "DELETE FROM Payment WHERE Payment_ID=%s", (pid,))
     commit(conn)
     print("Payment deleted.")
+
+def payments_menu(conn):
+    while True:
+        print("\n=== PAYMENTS ===")
+        print("1) Selective Mode")
+        print("2) Console Script Mode")
+        print("0) Back")
+        choice = prompt("Choose")
+
+        if choice == "1":
+            crud_menu(conn, "PAYMENTS", {
+                "1": ("List payments", list_payments),
+                "2": ("Add payment", add_payment),
+                "3": ("Update payment", update_payment),
+                "4": ("Delete payment", delete_payment),
+                "0": ("Back", lambda c: None),
+            })
+        elif choice == "2":
+            sql_console(conn, "PAYMENTS")
+        elif choice == "0":
+            return
+        else:
+            print("Invalid choice.")

@@ -4,6 +4,9 @@ from datetime import datetime
 
 from .queries import commit, run_query
 from utils.utils import print_table, prompt, prompt_datetime, prompt_int
+from utils.menu import crud_menu
+from operations.sql_console import sql_console
+
 
 
 def list_members(conn):
@@ -74,3 +77,26 @@ def delete_member(conn):
     run_query(conn, "DELETE FROM Member WHERE Member_ID=%s", (mid,))
     commit(conn)
     print("Member deleted (and dependent rows removed).")
+
+def members_menu(conn):
+    while True:
+        print("\n=== MEMBERS ===")
+        print("1) Selective Mode")
+        print("2) Console Script Mode")
+        print("0) Back")
+        choice = prompt("Choose")
+
+        if choice == "1":
+            crud_menu(conn, "MEMBERS", {
+                "1": ("List members", list_members),
+                "2": ("Add member", add_member),
+                "3": ("Update member", update_member),
+                "4": ("Delete member", delete_member),
+                "0": ("Back", lambda c: None),
+            })
+        elif choice == "2":
+            sql_console(conn, "MEMBERS")
+        elif choice == "0":
+            return
+        else:
+            print("Invalid choice.")

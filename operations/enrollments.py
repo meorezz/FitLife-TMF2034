@@ -4,6 +4,9 @@ from datetime import datetime
 
 from .queries import commit, run_query
 from utils.utils import print_table, prompt, prompt_datetime, prompt_int
+from utils.menu import crud_menu
+from operations.sql_console import sql_console
+
 
 
 def list_enrollments(conn):
@@ -49,3 +52,26 @@ def delete_enrollment(conn):
     run_query(conn, "DELETE FROM Enrollment WHERE Enrollment_ID=%s", (eid,))
     commit(conn)
     print("Enrollment deleted (and dependent payments removed).")
+
+def enrollments_menu(conn):
+    while True:
+        print("\n=== ENROLLMENTS ===")
+        print("1) Selective Mode")
+        print("2) Console Script Mode")
+        print("0) Back")
+        choice = prompt("Choose")
+
+        if choice == "1":
+            crud_menu(conn, "ENROLLMENTS", {
+                "1": ("List enrollments", list_enrollments),
+                "2": ("Add enrollment", add_enrollment),
+                "3": ("Update enrollment", update_enrollment),
+                "4": ("Delete enrollment", delete_enrollment),
+                "0": ("Back", lambda c: None),
+            })
+        elif choice == "2":
+            sql_console(conn, "ENROLLMENTS",)
+        elif choice == "0":
+            return
+        else:
+            print("Invalid choice.")

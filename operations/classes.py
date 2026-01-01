@@ -2,6 +2,9 @@ from __future__ import annotations
 
 from .queries import commit, run_query
 from utils.utils import print_table, prompt, prompt_datetime, prompt_int
+from utils.menu import crud_menu
+from operations.sql_console import sql_console
+
 
 
 def list_classes(conn):
@@ -64,3 +67,27 @@ def delete_class(conn):
     run_query(conn, "DELETE FROM `Class` WHERE Class_ID=%s", (cid,))
     commit(conn)
     print("Class deleted (and dependent rows removed).")
+
+
+def classes_menu(conn):
+    while True:
+        print("\n=== CLASSES ===")
+        print("1) Selective Mode")
+        print("2) Console Script Mode")
+        print("0) Back")
+        choice = prompt("Choose")
+
+        if choice == "1":
+            crud_menu(conn, "CLASSES", {
+                "1": ("List classes", list_classes),
+                "2": ("Add class", add_class),
+                "3": ("Update class", update_class),
+                "4": ("Delete class", delete_class),
+                "0": ("Back", lambda c: None),
+            })
+        elif choice == "2":
+            sql_console(conn, "CLASSES",)
+        elif choice == "0":
+            return
+        else:
+            print("Invalid choice.")

@@ -2,6 +2,9 @@ from __future__ import annotations
 
 from .queries import commit, run_query
 from utils.utils import print_table, prompt, prompt_int
+from utils.menu import crud_menu
+from operations.sql_console import sql_console
+
 
 
 def list_attendance(conn):
@@ -44,3 +47,26 @@ def delete_attendance(conn):
     run_query(conn, "DELETE FROM MemberClassAttendance WHERE Attendance_ID=%s", (aid,))
     commit(conn)
     print("Attendance deleted.")
+
+def attendance_menu(conn):
+    while True:
+        print("\n=== ATTENDANCE ===")
+        print("1) Selective Mode")
+        print("2) Console Script Mode")
+        print("0) Back")
+        choice = prompt("Choose")
+
+        if choice == "1":
+            crud_menu(conn, "ATTENDANCE", {
+                "1": ("List attendance", list_attendance),
+                "2": ("Add attendance", add_attendance),
+                "3": ("Update attendance", update_attendance),
+                "4": ("Delete attendance", delete_attendance),
+                "0": ("Back", lambda c: None),
+            })
+        elif choice == "2":
+            sql_console(conn, "ATTENDANCE")
+        elif choice == "0":
+            return
+        else:
+            print("Invalid choice.")

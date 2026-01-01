@@ -6,17 +6,35 @@ from mysql.connector import Error
 from database.db_connection import DBConfig, connect_db
 from utils.menu import crud_menu
 from utils.utils import prompt
-from operations.reports import reports_menu
-from operations.members import list_members, add_member, update_member, delete_member
-from operations.trainers import list_trainers, add_trainer, update_trainer, delete_trainer
-from operations.programs import list_programs, add_program, update_program, delete_program
-from operations.classes import list_classes, add_class, update_class, delete_class
-from operations.enrollments import list_enrollments, add_enrollment, update_enrollment, delete_enrollment
-from operations.payments import list_payments, add_payment, update_payment, delete_payment
-from operations.attendance import list_attendance, add_attendance, update_attendance, delete_attendance
+from operations.reports import *
+from operations.members import *
+from operations.trainers import *
+from operations.programs import *
+from operations.classes import *
+from operations.enrollments import *
+from operations.payments import *
+from operations.attendance import *
 from utils.utils import prompt
+from operations.sql_console import sql_console 
 
 
+def module_mode_menu(conn, title: str, ops: dict):
+    while True:
+        print(f"\n=== {title} ===")
+        print("1) Selective Mode")
+        print("2) Console Script Mode")
+        print("0) Back")
+        ch = prompt("Choose")
+
+        if ch == "1":
+            crud_menu(conn, title, ops)
+        elif ch == "2":
+            sql_console(conn, title)
+        elif ch == "0":
+            return
+        else:
+            print("Invalid choice.")
+            
 def main():
     cfg = DBConfig()
     try:
@@ -34,19 +52,21 @@ def main():
             print("\n****************************")
             print("\n=== FITLIFE WELLNESS APP ===")
             print("\n****************************")
-            print("1) Members CRUD")
-            print("2) Trainers CRUD")
-            print("3) Programs CRUD")
-            print("4) Classes CRUD")
-            print("5) Enrollments CRUD")
-            print("6) Payments CRUD")
-            print("7) Attendance CRUD")
-            print("8) Print Reports")
+            print("\nChoose any module to proceed:")
+            print("\n")
+            print("1) Members")
+            print("2) Trainers")
+            print("3) Programs")
+            print("4) Classes")
+            print("5) Enrollments")
+            print("6) Payments")
+            print("7) Attendance")
+            print("8) Reports")
             print("0) Exit")
-            choice = prompt("Choose")
+            choice = prompt("\nChoose")
 
             if choice == "1":
-                crud_menu(conn, "MEMBERS", {
+                module_mode_menu(conn, "MEMBERS", {
                     "1": ("List members", list_members),
                     "2": ("Add member", add_member),
                     "3": ("Update member", update_member),
@@ -54,7 +74,7 @@ def main():
                     "0": ("Back", lambda c: None),
                 })
             elif choice == "2":
-                crud_menu(conn, "TRAINERS", {
+                module_mode_menu(conn, "TRAINERS", {
                     "1": ("List trainers", list_trainers),
                     "2": ("Add trainer", add_trainer),
                     "3": ("Update trainer", update_trainer),
@@ -62,7 +82,7 @@ def main():
                     "0": ("Back", lambda c: None),
                 })
             elif choice == "3":
-                crud_menu(conn, "PROGRAMS", {
+                module_mode_menu(conn, "PROGRAMS", {
                     "1": ("List programs", list_programs),
                     "2": ("Add program", add_program),
                     "3": ("Update program", update_program),
@@ -70,7 +90,7 @@ def main():
                     "0": ("Back", lambda c: None),
                 })
             elif choice == "4":
-                crud_menu(conn, "CLASSES", {
+                module_mode_menu(conn, "CLASSES", {
                     "1": ("List classes", list_classes),
                     "2": ("Add class", add_class),
                     "3": ("Update class", update_class),
@@ -78,7 +98,7 @@ def main():
                     "0": ("Back", lambda c: None),
                 })
             elif choice == "5":
-                crud_menu(conn, "ENROLLMENTS", {
+                module_mode_menu(conn, "ENROLLMENTS", {
                     "1": ("List enrollments", list_enrollments),
                     "2": ("Add enrollment", add_enrollment),
                     "3": ("Update enrollment", update_enrollment),
@@ -86,7 +106,7 @@ def main():
                     "0": ("Back", lambda c: None),
                 })
             elif choice == "6":
-                crud_menu(conn, "PAYMENTS", {
+                module_mode_menu(conn, "PAYMENTS", {
                     "1": ("List payments", list_payments),
                     "2": ("Add payment", add_payment),
                     "3": ("Update payment", update_payment),
@@ -94,7 +114,7 @@ def main():
                     "0": ("Back", lambda c: None),
                 })
             elif choice == "7":
-                crud_menu(conn, "ATTENDANCE", {
+                module_mode_menu(conn, "ATTENDANCE", {
                     "1": ("List attendance", list_attendance),
                     "2": ("Add attendance", add_attendance),
                     "3": ("Update attendance", update_attendance),

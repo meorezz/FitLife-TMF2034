@@ -2,6 +2,9 @@ from __future__ import annotations
 
 from .queries import commit, run_query
 from utils.utils import print_table, prompt, prompt_int
+from utils.menu import crud_menu
+from operations.sql_console import sql_console
+
 
 
 def list_trainers(conn):
@@ -63,3 +66,26 @@ def delete_trainer(conn):
     run_query(conn, "DELETE FROM Trainer WHERE Trainer_ID=%s", (tid,))
     commit(conn)
     print("Trainer deleted (and dependent rows removed).")
+    
+def trainers_menu(conn):
+    while True:
+        print("\n=== TRAINERS ===")
+        print("1) Selective Mode")
+        print("2) Console Script Mode")
+        print("0) Back")
+        choice = prompt("Choose")
+
+        if choice == "1":
+            crud_menu(conn, "TRAINERS", {
+                "1": ("List trainers", list_trainers),
+                "2": ("Add trainer", add_trainer),
+                "3": ("Update trainer", update_trainer),
+                "4": ("Delete trainer", delete_trainer),
+                "0": ("Back", lambda c: None),
+            })
+        elif choice == "2":
+            sql_console(conn, "TRAINERS")
+        elif choice == "0":
+            return
+        else:
+            print("Invalid choice.")
